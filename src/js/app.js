@@ -56,7 +56,7 @@
                 };
             };
 
-            if (validData[i].classList.contains('validation-required')) {
+            if (validData[i].dataset.state === "required") {
 
                 if (validData[i].type !== "checkbox" && validData[i].value === "") {
 
@@ -80,9 +80,10 @@
                     validationWithRegularExpresion("^[1-9]{1}$|^[1-9]{1}[0-9]{1}$|^100$", "Kwota to liczba z przedziału 1-100");
                 }
 
-            } else if (validData[i].classList.contains('validation-not-required') && validData[i].value !== '') {
+            } else if (validData[i].dataset.state !== "required" && validData[i].value !== '') {
 
                 if (validData[i].name === "email") {
+
                     validationWithRegularExpresion("^[a-zA-Z\\d][\-\\w\.]+@([a-zA-Z\\d]+[\-a-zA-Z\\d]+\.)+[a-zA-Z]+$", "Nieprawidłowy adres e-mail");
 
                 } else if (validData[i].name === "pin") {

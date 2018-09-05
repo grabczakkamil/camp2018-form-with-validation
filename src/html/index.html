@@ -15,24 +15,24 @@
       <div class="col-sm-6">
         <div class="form-group" id="input-user">
           <label for="username">Nazwa użytkownika</label>
-          <input id="username" name="username" placeholder="Małe litery bez spacji, wymagane" type="text" class="form-control here validation-required">
+          <input id="username" name="username" placeholder="Małe litery bez spacji, wymagane" type="text" class="form-control here" data-state="required">
 <!--          <p class="valid-feedback">Wszystko dobrze!</p>-->
         </div>
         <div class="form-group">
           <label for="email">E-mail</label>
-          <input id="email" name="email" placeholder="Poprawny format, np. jan@kowalski.pl" type="email" class="form-control here validation-not-required">
+          <input id="email" name="email" placeholder="Poprawny format, np. jan@kowalski.pl" type="email" class="form-control here">
         </div>
         <div class="form-group">
           <label for="pin">PIN</label>
-          <input id="pin" name="pin" placeholder="Same cyfry, max. 8 znaków, opcjonalne" type="text" class="form-control here validation-not-required">
+          <input id="pin" name="pin" placeholder="Same cyfry, max. 8 znaków, opcjonalne" type="text" class="form-control here">
         </div>
         <div class="form-group">
           <label for="amount">Kwota</label>
-          <input id="amount" name="amount" placeholder="Przedział (0; 100>, wymagane" type="text" class="form-control here validation-required">
+          <input id="amount" name="amount" placeholder="Przedział (0; 100>, wymagane" type="text" class="form-control here" data-state="required">
         </div>
         <div class="form-group">
           <div class="form-check">
-            <input class="form-check-input validation-required" type="checkbox" value="" id="agreement-1" name="agreement-1">
+            <input class="form-check-input" type="checkbox" value="" id="agreement-1" name="agreement-1" data-state="required">
             <label class="form-check-label" for="agreement-1">
               Ta zgoda jest wymagana *
             </label>
@@ -40,7 +40,7 @@
         </div>
         <div class="form-group">
           <div class="form-check">
-            <input class="form-check-input validation-required" type="checkbox" value="" id="agreement-2" name="agreement-2">
+            <input class="form-check-input" type="checkbox" value="" id="agreement-2" name="agreement-2" data-state="required">
             <label class="form-check-label" for="agreement-2">
               Ta zgoda też jest wymagana *
             </label>
