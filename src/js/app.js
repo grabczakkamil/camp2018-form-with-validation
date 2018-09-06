@@ -2,6 +2,25 @@
     'use strict';
     const formEfi = document.getElementById("form-efi");
 
+    const validationConfig = {
+        username: {
+            "RegExp": "^[^ A-Z]+$",
+            "alert": "Nazwa użytkownika może składać się z małych liter i nie może zawierać spacji"
+        },
+        email: {
+            "RegExp": "^[a-zA-Z\\d][\-\\w\.]+@([a-zA-Z\\d]+[\-a-zA-Z\\d]+\.)+[a-zA-Z]+$",
+            "alert": "Nieprawidłowy adres e-mail"
+        },
+        pin: {
+            "RegExp": "^[0-9]{1,8}$",
+            "alert": "Pin musi składać się maksymalnie z 8 cyfr"
+        },
+        amount: {
+            "RegExp": "^[1-9]{1}$|^[1-9]{1}[0-9]{1}$|^100$",
+            "alert": "Kwota to liczba z przedziału 1-100"
+        }
+    }
+
     formEfi.addEventListener("submit", (event) => {
         event.preventDefault();
 
@@ -41,20 +60,19 @@
             validData[i].classList.add(className);
         };
 
+        function validationWithRegularExpresion(regularExpresionValue) {
+            let patternFormField = new RegExp(regularExpresionValue);
+
+            if (patternFormField.test(validData[i].value) === false) {
+                addClassName("is-invalid");     
+
+            } else {
+                addClassName("is-valid");
+            };
+        };
+
         for (var i = 0; i < validDataLength; i++) {
             const inputParent = validData[i].parentNode;
-
-            function validationWithRegularExpresion(regularExpresionValue, infoText) {
-                const patternFormField = new RegExp(regularExpresionValue);
-
-                if (patternFormField.test(validData[i].value) === false) {
-                    addClassName("is-invalid");
-                    inputParent.appendChild(feedbackMessage(infoText));
-
-                } else {
-                    addClassName("is-valid");
-                };
-            };
 
             if (validData[i].dataset.state === "required") {
 
@@ -74,23 +92,25 @@
                     }
 
                 } else if (validData[i].name === "username") {
-                    validationWithRegularExpresion("^[^ A-Z]+$", "Nazwa użytkownika może składać się z małych liter i nie może zawierać spacji");
+                    validationWithRegularExpresion(validationConfig.username.RegExp);
+                    inputParent.appendChild(feedbackMessage(validationConfig.username.alert));
 
                 } else if (validData[i].name === "amount") {
-                    validationWithRegularExpresion("^[1-9]{1}$|^[1-9]{1}[0-9]{1}$|^100$", "Kwota to liczba z przedziału 1-100");
+                    validationWithRegularExpresion(validationConfig.amount.RegExp);
+                    inputParent.appendChild(feedbackMessage(validationConfig.amount.alert));
                 }
 
             } else if (validData[i].dataset.state !== "required" && validData[i].value !== '') {
 
                 if (validData[i].name === "email") {
-
-                    validationWithRegularExpresion("^[a-zA-Z\\d][\-\\w\.]+@([a-zA-Z\\d]+[\-a-zA-Z\\d]+\.)+[a-zA-Z]+$", "Nieprawidłowy adres e-mail");
+                    validationWithRegularExpresion(validationConfig.email.RegExp);
+                    inputParent.appendChild(feedbackMessage(validationConfig.email.alert));
 
                 } else if (validData[i].name === "pin") {
-                    validationWithRegularExpresion("^[0-9]{1,8}$", "Pin musi składać się maksymalnie z 8 cyfr");
+                    validationWithRegularExpresion(validationConfig.pin.RegExp);  
+                    inputParent.appendChild(feedbackMessage(validationConfig.pin.alert));
                 }
             }
         }
     });
-    console.log(document.getElementsByClassName('validation'));
 })();
