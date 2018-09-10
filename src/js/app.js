@@ -16,7 +16,8 @@
             "alert": "Pin musi składać się maksymalnie z 8 cyfr"
         },
         amount: {
-            "RegExp": "^[1-9]{1}$|^[1-9]{1}[0-9]{1}$|^100$",
+            "minValue": "1",
+            "maxValue": "100",
             "alert": "Kwota to liczba z przedziału 1-100"
         }
     }
@@ -96,8 +97,15 @@
                     inputParent.appendChild(feedbackMessage(validationConfig.username.alert));
 
                 } else if (validData[i].name === "amount") {
-                    validationWithRegularExpresion(validationConfig.amount.RegExp);
-                    inputParent.appendChild(feedbackMessage(validationConfig.amount.alert));
+                    
+                    
+                     if (validData[i].value >= validationConfig.amount.minValue && validData[i].value <= validationConfig.amount.maxValue === true) {
+                         addClassName("is-valid");
+                     } else {
+                         addClassName("is-invalid");
+                     }; 
+                   
+                   inputParent.appendChild(feedbackMessage(validationConfig.amount.alert));
                 }
 
             } else if (validData[i].dataset.state !== "required" && validData[i].value !== '') {
