@@ -26,22 +26,21 @@
             "alert": "Musisz zaznaczyć tę zgodę"
         }
     };
+    
+          function addClassName(className) {
+            inputName.classList.add(className);
+        };
 
-    const formEfi = document.getElementById("form-efi");
-    const invalidInputStyle = document.getElementsByClassName('is-invalid');
-    const paragraphsWithFeedback = document.getElementsByClassName('invalid-feedback');
-    const validData = document.forms[0].getElementsByTagName('input');
-    const validDataLength = validData.length;
+    function validationWithRegularExpresion(regularExpresionValue) {
+        let patternFormField = new RegExp(regularExpresionValue);
 
+        if (patternFormField.test(inputName.value) === false) {
+            addClassName("is-invalid");
 
-    while (paragraphsWithFeedback[0]) {
-        paragraphsWithFeedback[0].remove();
+        } else {
+            addClassName("is-valid");
+        };
     };
-
-    while (invalidInputStyle[0]) {
-        invalidInputStyle[0].classList.remove('is-invalid');
-    };
-
 
     function feedbackMessage(alertText) {
         const newAlert = document.createElement("p");
@@ -51,78 +50,131 @@
         return newAlert;
     };
 
-    function addClassName(className) {
-        validData[i].classList.add(className);
-    };
-
-    function validationWithRegularExpresion(regularExpresionValue) {
-        let patternFormField = new RegExp(regularExpresionValue);
-
-        if (patternFormField.test(validData[i].value) === false) {
-            addClassName("is-invalid");
-
-        } else {
-            addClassName("is-valid");
-        };
-    };
-
-    for (var i = 0; i < validDataLength; i++) {
-        const inputParent = validData[i].parentNode;
-
-        if (validData[i].dataset.state === "required") {
-
-            if (validData[i].type !== "checkbox" && validData[i].value === "") {
-
-                addClassName("is-invalid");
-                inputParent.appendChild(feedbackMessage(validationConfig.noCheckbox.alert));
-
-            } else if (validData[i].type === "checkbox") {
-
-                if (validData[i].checked === false) {
-                    addClassName("is-invalid");
-                    inputParent.appendChild(feedbackMessage(validationConfig.checkbox.alert));
-
-                } else {
-                    addClassName("is-valid");
-                }
-
-            } else if (validData[i].name === "username") {
-
-                console.log(validData[i]);
-
-                validationWithRegularExpresion(validationConfig.username.RegExp);
-                inputParent.appendChild(feedbackMessage(validationConfig.username.alert));
-
-            } else if (validData[i].name === "amount") {
-
-
-                if (validData[i].value >= validationConfig.amount.minValue && validData[i].value <= validationConfig.amount.maxValue === true) {
-                    addClassName("is-valid");
-                } else {
-                    addClassName("is-invalid");
-                };
-
-                inputParent.appendChild(feedbackMessage(validationConfig.amount.alert));
-            }
-
-
-        } else if (validData[i].dataset.state !== "required" && validData[i].value !== '') {
-
-            if (validData[i].name === "email") {
-
-                validationWithRegularExpresion(validationConfig.email.RegExp);
-                inputParent.appendChild(feedbackMessage(validationConfig.email.alert));
-
-            } else if (validData[i].name === "pin") {
-                validationWithRegularExpresion(validationConfig.pin.RegExp);
-                inputParent.appendChild(feedbackMessage(validationConfig.pin.alert));
-            }
-        }
-    }
+    const formEfi = document.getElementById("form-efi");
+    const invalidInputStyle = document.getElementsByClassName('is-invalid');
+    const paragraphsWithFeedback = document.getElementsByClassName('invalid-feedback');
+    const validData = document.forms[0].getElementsByTagName('input');
+    const validDataLength = validData.length;
 
 
 
-    formEfi.addEventListener("submit", (event) => {
-        event.preventDefault();
+    const inputName = document.querySelector('[name="username"]');
+    const inputParent = inputName.parentNode;
+
+    inputName.addEventListener("change", (event) => {
+       validationWithRegularExpresion(validationConfig.username.RegExp);
+        inputParent.appendChild(feedbackMessage(validationConfig.username.alert));
+
+
     });
+
+
+
+    //    validData.forEach(myFunction);
+    //    
+    //    function myFunction() {
+    //    inputName.addEventListener("change", (event) => {
+    //
+    //    
+    //    console.log(inputName);
+    //        
+    //
+    //        });
+    //        
+    //    };
+
+
+
+
+    //    while (paragraphsWithFeedback[0]) {
+    //        paragraphsWithFeedback[0].remove();
+    //    };
+    //
+    //    while (invalidInputStyle[0]) {
+    //        invalidInputStyle[0].classList.remove('is-invalid');
+    //    };
+    //
+    //
+    //    function feedbackMessage(alertText) {
+    //        const newAlert = document.createElement("p");
+    //
+    //        newAlert.innerHTML = alertText;
+    //        newAlert.classList.add("invalid-feedback");
+    //        return newAlert;
+    //    };
+    //
+    //    function addClassName(className) {
+    //        validData[i].classList.add(className);
+    //    };
+    //
+    //    function validationWithRegularExpresion(regularExpresionValue) {
+    //        let patternFormField = new RegExp(regularExpresionValue);
+    //
+    //        if (patternFormField.test(validData[i].value) === false) {
+    //            addClassName("is-invalid");
+    //
+    //        } else {
+    //            addClassName("is-valid");
+    //        };
+    //    };
+    //
+    //    for (var i = 0; i < validDataLength; i++) {
+    //        const inputParent = validData[i].parentNode;
+    //
+    //        if (validData[i].dataset.state === "required") {
+    //
+    //            if (validData[i].type !== "checkbox" && validData[i].value === "") {
+    //
+    //                addClassName("is-invalid");
+    //                inputParent.appendChild(feedbackMessage(validationConfig.noCheckbox.alert));
+    //
+    //            } else if (validData[i].type === "checkbox") {
+    //
+    //                if (validData[i].checked === false) {
+    //                    addClassName("is-invalid");
+    //                    inputParent.appendChild(feedbackMessage(validationConfig.checkbox.alert));
+    //
+    //                } else {
+    //                    addClassName("is-valid");
+    //                }
+    //
+    //            } else if (validData[i].name === "username") {
+    //
+    //                console.log(validData[i]);
+    //
+    //                validationWithRegularExpresion(validationConfig.username.RegExp);
+    //                inputParent.appendChild(feedbackMessage(validationConfig.username.alert));
+    //
+    //            } else if (validData[i].name === "amount") {
+    //
+    //
+    //                if (validData[i].value >= validationConfig.amount.minValue && validData[i].value <= validationConfig.amount.maxValue === true) {
+    //                    addClassName("is-valid");
+    //                } else {
+    //                    addClassName("is-invalid");
+    //                };
+    //
+    //                inputParent.appendChild(feedbackMessage(validationConfig.amount.alert));
+    //            }
+    //
+    //
+    //        } else if (validData[i].dataset.state !== "required" && validData[i].value !== '') {
+    //
+    //            if (validData[i].name === "email") {
+    //
+    //                validationWithRegularExpresion(validationConfig.email.RegExp);
+    //                inputParent.appendChild(feedbackMessage(validationConfig.email.alert));
+    //
+    //            } else if (validData[i].name === "pin") {
+    //                validationWithRegularExpresion(validationConfig.pin.RegExp);
+    //                inputParent.appendChild(feedbackMessage(validationConfig.pin.alert));
+    //            }
+    //        }
+    //    }
+    //
+    //
+    //
+    //    formEfi.addEventListener("submit", (event) => {
+    //        event.preventDefault();
+    //    });
 })();
