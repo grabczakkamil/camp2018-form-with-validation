@@ -54,13 +54,9 @@
 
             if (validData[i].dataset.state === "required") {
 
-                if (validData[i].type !== "checkbox" && validData[i].value === "") {
+                
 
-                    validData[i].classList.add("is-invalid");
-                    validData[i].parentNode.lastChild.innerHTML = validationConfig.noCheckbox.alert;
-                    validData[i].parentNode.lastChild.classList.add('invalid-feedback');
-
-                } else if (validData[i].name === "username") {
+                 if (validData[i].name === "username") {
 
                     validationWithRegularExpresion(validData[i], validationConfig.username.RegExp);
 
@@ -111,6 +107,15 @@
                 }
             }
         });
+        
+        validData[i].addEventListener('blur', function () {
+            if (validData[i].dataset.state === "required" && validData[i].type !== "checkbox" && validData[i].value === "") {
+                    validData[i].classList.add("is-invalid");
+                    validData[i].parentNode.lastChild.innerHTML = validationConfig.noCheckbox.alert;
+                    validData[i].parentNode.lastChild.classList.add('invalid-feedback');
+            };
+        });
+        
     };
 
     //    formEfi.addEventListener("submit", (event) => {
