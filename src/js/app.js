@@ -4,7 +4,6 @@
     const validationConfig = {
 
         username: {
-            "fieldSelector": "[name='username']",
             "RegExp": "^[a-z]+$",
             "alert": "Nazwa użytkownika może składać się z małych liter i nie może zawierać spacji"
         },
@@ -49,7 +48,6 @@
     };
 
     const formEfi = document.getElementById("form-efi");
-    const invalidInputStyle = document.getElementsByClassName('is-invalid');
     const paragraphsWithFeedback = document.getElementsByClassName('invalid-feedback');
     const validData = formEfi.querySelectorAll('input');
     const validDataLength = validData.length;
@@ -59,29 +57,44 @@
 
 
         validData[i].addEventListener('change', function () {
-            while (paragraphsWithFeedback[0]) {
-                paragraphsWithFeedback[0].remove();
-            };
-
-            while (invalidInputStyle[0]) {
-                invalidInputStyle[0].classList.remove('is-invalid');
-            };
+            
+            validData[i].classList.remove('is-invalid');
 
             if (validData[i].dataset.state === "required") {
+                
+                if (validData[i].type !== "checkbox" && validData[i].value === "") {
+    
+                    validData[i].classList.add("is-invalid");
+                    validData[i].parentNode.appendChild(feedbackMessage(validationConfig.noCheckbox.alert));
+                }
 
-                if (validData[i].name === "username") {
+               else if (validData[i].name === "username") {
 
                     validationWithRegularExpresion(validData[i], validationConfig.username.RegExp);
                     validData[i].parentNode.appendChild(feedbackMessage(validationConfig.username.alert));
                 } else if (validData[i].name === "amount") {
+                    
+                   var amountValue = parseInt(validData[i].value);
 
-                    if (validData[i].value >= validationConfig.amount.minValue && validData[i].value <= validationConfig.amount.maxValue === true) {
+                    if (amountValue >= validationConfig.amount.minValue && amountValue <= validationConfig.amount.maxValue) {
                         validData[i].classList.add("is-valid");
                     } else {
                         validData[i].classList.add("is-invalid");
                     };
                     validData[i].parentNode.appendChild(feedbackMessage(validationConfig.amount.alert));
                 }
+                
+                else if (validData[i].type === "checkbox") {
+    
+                    if (validData[i].checked === false) {
+                        validData[i].classList.add("is-invalid");
+                        validData[i].parentNode.appendChild(feedbackMessage(validationConfig.checkbox.alert));
+    
+                    } else {
+                        validData[i].classList.add("is-valid");
+                    }
+                }
+    
 
             } else if (validData[i].dataset.state !== "required" && validData[i].value !== '') {
 
@@ -94,8 +107,6 @@
                     validationWithRegularExpresion(validData[i], validationConfig.pin.RegExp);
                     validData[i].parentNode.appendChild(feedbackMessage(validationConfig.pin.alert));
                 }
-            } else {
-                console.log("COŚ INNEGO");
             }
         });
     };
