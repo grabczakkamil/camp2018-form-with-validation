@@ -4,64 +4,87 @@
     const validationConfig = {
 
         username: {
-            "RegExp": "^[a-z]+$",
-            "alert": "Nazwa użytkownika może składać się z małych liter i nie może zawierać spacji"
+            "RegExpValue": "^[a-z]+$",
+            "alert": "Nazwa użytkownika może składać się z małych liter i nie może zawierać spacji",
+            "submitState": "false"
         },
         email: {
-            "RegExp": "^[a-zA-Z\\d][\-\\w\.]+@([a-zA-Z\\d]+[\-a-zA-Z\\d]+\.)+[a-zA-Z]+$",
-            "alert": "Nieprawidłowy adres e-mail"
+            "RegExpValue": "^[a-zA-Z\\d][\-\\w\.]+@([a-zA-Z\\d]+[\-a-zA-Z\\d]+\.)+[a-zA-Z]+$",
+            "alert": "Nieprawidłowy adres e-mail",
+            "submitState": "false"
         },
         pin: {
-            "RegExp": "^[0-9]{1,8}$",
-            "alert": "Pin musi składać się maksymalnie z 8 cyfr"
+            "RegExpValue": "^[0-9]{1,8}$",
+            "alert": "Pin musi składać się maksymalnie z 8 cyfr",
+            "submitState": "false"
         },
         amount: {
             "minValue": "1",
             "maxValue": "100",
-            "alert": "Kwota to liczba z przedziału 1-100"
+            "alert": "Kwota to liczba z przedziału 1-100",
+            "submitState": "false"
         },
         checkbox: {
-            "alert": "Musisz zaznaczyć tę zgodę"
+            "alert": "Musisz zaznaczyć tę zgodę",
+            "submitState": "false"
         },
-        noCheckbox: {
+        otherFields: {
             "alert": "Uzupełnij to pole"
+        },
+        unlockSubmit: function () {
+            if (this.username.submitState === "true" && this.pin.submitState === "true") {
+                console.log("Submit");
+            } else {
+                console.log("nie zadziałam")
+            }
         }
-    };
-
-    function validationWithRegularExpresion(validationInputValue, regularExpresionValue) {
-        let patternFormField = new RegExp(regularExpresionValue);
-
-        if (patternFormField.test(validationInputValue.value) === false) {
-            validationInputValue.classList.add("is-invalid");
-
-        } else {
-            validationInputValue.classList.add("is-valid");
-        };
     };
 
     const formEfi = document.getElementById("form-efi");
     const validData = formEfi.querySelectorAll('input');
     const validDataLength = validData.length;
 
+    function invalidInputStyle(invalidInputValue, invalidConfigValue) {
 
+        invalidInputValue.classList.add("is-invalid");
+        invalidInputValue.parentNode.lastChild.innerHTML = invalidConfigValue.alert;
+        invalidInputValue.parentNode.lastChild.classList.add('invalid-feedback');
+    };
+
+    function validationWithRegularExpresion(validationInputValue, configValue) {
+        let patternFormField = new RegExp(configValue.RegExpValue);
+
+        if (patternFormField.test(validationInputValue.value) === false) {
+            invalidInputStyle(validationInputValue, configValue);
+            configValue.submitState = "false"
+
+        } else {
+            validationInputValue.classList.add("is-valid");
+            //            configValue.submitState = "true"
+        };
+        //        validationConfig.unlockSubmit();
+    };
+
+    
     for (let i = 0; i < validDataLength; i++) {
         const newAlert = document.createElement("p.alert-field");
         validData[i].parentNode.appendChild(newAlert);
 
-        validData[i].addEventListener('change', function () {
+        validData[i].addEventListener('blur', function () {
 
             validData[i].classList.remove('is-invalid');
 
             if (validData[i].dataset.state === "required") {
 
+                if (validData[i].type !== "checkbox" && validData[i].value === "") {
+                    invalidInputStyle(validData[i], validationConfig.otherFields);
+                }
                 
+                else if (validData[i].value !== "") {
 
-                 if (validData[i].name === "username") {
+                if (validData[i].name === "username") {
 
-                    validationWithRegularExpresion(validData[i], validationConfig.username.RegExp);
-
-                    validData[i].parentNode.lastChild.innerHTML = validationConfig.username.alert;
-                    validData[i].parentNode.lastChild.classList.add('invalid-feedback');
+                    validationWithRegularExpresion(validData[i], validationConfig.username);
 
                 } else if (validData[i].name === "amount") {
 
@@ -69,56 +92,39 @@
 
                     if (amountValue >= validationConfig.amount.minValue && amountValue <= validationConfig.amount.maxValue) {
                         validData[i].classList.add("is-valid");
+
                     } else {
-                        validData[i].classList.add("is-invalid");
+                        invalidInputStyle(validData[i], validationConfig.amount);
                     };
-                    validData[i].parentNode.lastChild.innerHTML = validationConfig.amount.alert;
-                    validData[i].parentNode.lastChild.classList.add('invalid-feedback');
 
                 } else if (validData[i].type === "checkbox") {
 
                     if (validData[i].checked === false) {
-                        validData[i].classList.add("is-invalid");
 
-                        validData[i].parentNode.lastChild.innerHTML = validationConfig.checkbox.alert;
-                        validData[i].parentNode.lastChild.classList.add('invalid-feedback');
+                        invalidInputStyle(validData[i], validationConfig.checkbox);
 
                     } else {
                         validData[i].classList.add("is-valid");
                     }
                 }
-
+                }
 
             } else if (validData[i].dataset.state !== "required" && validData[i].value !== '') {
 
                 if (validData[i].name === "email") {
 
-                    validationWithRegularExpresion(validData[i], validationConfig.email.RegExp);
-
-                    validData[i].parentNode.lastChild.innerHTML = validationConfig.email.alert;
-                    validData[i].parentNode.lastChild.classList.add('invalid-feedback');
+                    validationWithRegularExpresion(validData[i], validationConfig.email);
 
                 } else if (validData[i].name === "pin") {
-                    validationWithRegularExpresion(validData[i], validationConfig.pin.RegExp);
-
-                    validData[i].parentNode.lastChild.innerHTML = validationConfig.pin.alert;
-                    validData[i].parentNode.lastChild.classList.add('invalid-feedback');
-
+                    validationWithRegularExpresion(validData[i], validationConfig.pin);
                 }
             }
+
         });
-        
-        validData[i].addEventListener('blur', function () {
-            if (validData[i].dataset.state === "required" && validData[i].type !== "checkbox" && validData[i].value === "") {
-                    validData[i].classList.add("is-invalid");
-                    validData[i].parentNode.lastChild.innerHTML = validationConfig.noCheckbox.alert;
-                    validData[i].parentNode.lastChild.classList.add('invalid-feedback');
-            };
-        });
-        
+
     };
 
-    //    formEfi.addEventListener("submit", (event) => {
-    //        event.preventDefault();
-    //    });
+    formEfi.addEventListener("submit", (event) => {
+        event.preventDefault();
+    });
 })();
