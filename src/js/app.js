@@ -5,24 +5,20 @@
 
         username: {
             "RegExpValue": "^[a-z]+$",
-            "alert": "Nazwa użytkownika może składać się z małych liter i nie może zawierać spacji",
-            "submitState": "false"
+            "alert": "Nazwa użytkownika może składać się z małych liter i nie może zawierać spacji"
         },
         email: {
             "RegExpValue": "^[a-zA-Z\\d][\-\\w\.]+@([a-zA-Z\\d]+[\-a-zA-Z\\d]+\.)+[a-zA-Z]+$",
-            "alert": "Nieprawidłowy adres e-mail",
-            "submitState": "false"
+            "alert": "Nieprawidłowy adres e-mail"
         },
         pin: {
             "RegExpValue": "^[0-9]{1,8}$",
-            "alert": "Pin musi składać się maksymalnie z 8 cyfr",
-            "submitState": "false"
+            "alert": "Pin musi składać się maksymalnie z 8 cyfr"
         },
         amount: {
             "minValue": "1",
             "maxValue": "100",
-            "alert": "Kwota to liczba z przedziału 1-100",
-            "submitState": "false"
+            "alert": "Kwota to liczba z przedziału 1-100"
         },
         checkbox: {
             "alert": "Musisz zaznaczyć tę zgodę",
@@ -30,13 +26,6 @@
         },
         otherFields: {
             "alert": "Uzupełnij to pole"
-        },
-        unlockSubmit: function () {
-            if (this.username.submitState === "true" && this.pin.submitState === "true") {
-                console.log("Submit");
-            } else {
-                console.log("nie zadziałam")
-            }
         }
     };
 
@@ -49,6 +38,7 @@
         invalidInputValue.classList.add("is-invalid");
         invalidInputValue.parentNode.lastChild.innerHTML = invalidConfigValue.alert;
         invalidInputValue.parentNode.lastChild.classList.add('invalid-feedback');
+        invalidInputValue.dataset.iscorrect = false;
     };
 
     function validationWithRegularExpresion(validationInputValue, configValue) {
@@ -56,47 +46,57 @@
 
         if (patternFormField.test(validationInputValue.value) === false) {
             invalidInputStyle(validationInputValue, configValue);
-            configValue.submitState = "false"
 
         } else {
             validationInputValue.classList.add("is-valid");
-            //            configValue.submitState = "true"
+            validationInputValue.dataset.iscorrect = true;
+
         };
-        //        validationConfig.unlockSubmit();
     };
 
-    
+    function addDataIsCorrectAtribute(InputType) {
+        if (InputType.dataset.state === "required") {
+            InputType.setAttribute('data-iscorrect', "false");
+        } else {
+            InputType.setAttribute('data-iscorrect', "true");
+        }
+    }
+
     for (let i = 0; i < validDataLength; i++) {
         const newAlert = document.createElement("p.alert-field");
         validData[i].parentNode.appendChild(newAlert);
 
-        validData[i].addEventListener('blur', function () {
+        addDataIsCorrectAtribute(validData[i]);
+
+        validData[i].addEventListener('input', function () {
 
             validData[i].classList.remove('is-invalid');
 
             if (validData[i].dataset.state === "required") {
 
-                if (validData[i].type !== "checkbox" && validData[i].value === "") {
+
+                if (validData[i].value === "" && validData[i].type !== "checkbox") {
                     invalidInputStyle(validData[i], validationConfig.otherFields);
-                }
-                
-                else if (validData[i].value !== "") {
 
-                if (validData[i].name === "username") {
+                } else if (validData[i].value !== "") {
 
-                    validationWithRegularExpresion(validData[i], validationConfig.username);
+                    if (validData[i].name === "username") {
 
-                } else if (validData[i].name === "amount") {
+                        validationWithRegularExpresion(validData[i], validationConfig.username);
 
-                    var amountValue = parseInt(validData[i].value);
+                    } else if (validData[i].name === "amount") {
 
-                    if (amountValue >= validationConfig.amount.minValue && amountValue <= validationConfig.amount.maxValue) {
-                        validData[i].classList.add("is-valid");
+                        var amountValue = parseInt(validData[i].value);
 
-                    } else {
-                        invalidInputStyle(validData[i], validationConfig.amount);
-                    };
+                        if (amountValue >= validationConfig.amount.minValue && amountValue <= validationConfig.amount.maxValue) {
+                            validData[i].classList.add("is-valid");
+                            validData[i].dataset.iscorrect = true;
 
+                        } else {
+                            invalidInputStyle(validData[i], validationConfig.amount);
+                        };
+
+                    }
                 } else if (validData[i].type === "checkbox") {
 
                     if (validData[i].checked === false) {
@@ -105,18 +105,26 @@
 
                     } else {
                         validData[i].classList.add("is-valid");
+                        validData[i].dataset.iscorrect = true;
+
                     }
                 }
-                }
 
-            } else if (validData[i].dataset.state !== "required" && validData[i].value !== '') {
+            } else if (validData[i].dataset.state !== "required") {
+                validData[i].classList.remove('is-invalid');
 
-                if (validData[i].name === "email") {
+                if (validData[i].value !== '') {
 
-                    validationWithRegularExpresion(validData[i], validationConfig.email);
+                    if (validData[i].name === "email") {
 
-                } else if (validData[i].name === "pin") {
-                    validationWithRegularExpresion(validData[i], validationConfig.pin);
+                        validationWithRegularExpresion(validData[i], validationConfig.email);
+
+                    } else if (validData[i].name === "pin") {
+                        validationWithRegularExpresion(validData[i], validationConfig.pin);
+                    }
+                } else if (validData[i].value === '') {
+                    validData[i].classList.remove('is-invalid');
+                    validData[i].classList.remove('is-valid');
                 }
             }
 
